@@ -2,6 +2,7 @@ from KAN import KAN
 import matplotlib.pyplot as plt
 import torch
 import numpy as np
+import pickle
 
 def create_dataset(f, 
                    n_var=2, 
@@ -62,6 +63,10 @@ f = lambda x: torch.exp(torch.sin(torch.pi * x[:, [0]]) + x[:, [1]]**2)
 model = KAN(width=[2, 1, 1], grid=3, k=3)
 dataset = create_dataset(f, n_var=2)
 model.train(dataset, steps=200)
+
+
+with open('kan_model.pkl', 'wb') as file:
+    pickle.dump(model, file)
 
 x1_values = [0.0, 0.25, 0.5, 0.75, 1.0]  
 num_x1 = len(x1_values)
