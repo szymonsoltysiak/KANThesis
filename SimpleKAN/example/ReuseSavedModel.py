@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from KAN import KAN
 import matplotlib.pyplot as plt
 import torch
