@@ -132,20 +132,6 @@ class KAN(nn.Module):
 
         global train_loss, reg_
 
-        # def closure():
-        #     global train_loss, reg_
-        #     optimizer.zero_grad()
-        #     pred = self.forward(dataset['train_input'][train_id].to(device))
-        #     if sglr_avoid == True:
-        #         id_ = torch.where(torch.isnan(torch.sum(pred, dim=1)) == False)[0]
-        #         train_loss = loss_fn(pred[id_], dataset['train_label'][train_id][id_].to(device))
-        #     else:
-        #         train_loss = loss_fn(pred, dataset['train_label'][train_id].to(device))
-        #     reg_ = reg(self.acts_scale)
-        #     objective = train_loss + lamb * reg_
-        #     objective.backward()
-        #     return objective
-
         for _ in pbar:
 
             train_id = np.random.choice(dataset['train_input'].shape[0], batch_size, replace=False)
