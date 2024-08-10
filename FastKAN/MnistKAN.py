@@ -9,32 +9,27 @@ from tqdm import tqdm
 from KAN import KANet
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+import numpy as np
 
-# Load MNIST
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
 trainset = torchvision.datasets.MNIST(root="./data", train=True, download=True, transform=transform)
 valset = torchvision.datasets.MNIST(root="./data", train=False, download=True, transform=transform)
 trainloader = DataLoader(trainset, batch_size=64, shuffle=True)
 valloader = DataLoader(valset, batch_size=64, shuffle=False)
 
-# Define model
 model = KANet([28 * 28, 64, 10])
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-# Define optimizer
 optimizer = optim.AdamW(model.parameters(), lr=1e-3)
 
-# Define loss
 criterion = nn.CrossEntropyLoss()
 
-# Define ReduceLROnPlateau scheduler
 scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.7, patience=3, verbose=True)
 
 model_save_path = 'kanet_minst.pth'
 
 for epoch in range(5):
-    # Train
     model.train()
     total_loss = 0
     total_accuracy = 0
@@ -54,7 +49,6 @@ for epoch in range(5):
     total_loss /= len(trainloader)
     total_accuracy /= len(trainloader)
 
-    # Validation
     model.eval()
     val_loss = 0
     val_accuracy = 0
@@ -72,14 +66,12 @@ for epoch in range(5):
     val_loss /= len(valloader)
     val_accuracy /= len(valloader)
 
-    # Step the scheduler based on validation loss
     scheduler.step(val_loss)
 
     print(f"Epoch {epoch + 1}, Train Loss: {total_loss}, Train Accuracy: {total_accuracy}, Val Loss: {val_loss}, Val Accuracy: {val_accuracy}")
 
 torch.save(model.state_dict(), model_save_path)
 
-# Draw confusion matrix after training and saving
 cm = confusion_matrix(all_labels, all_preds)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=list(range(10)))
 disp.plot()
@@ -87,3 +79,23 @@ plt.title(f'Confusion Matrix - After Training')
 plt.show()
 
 print("Training complete and model saved")
+
+indices = np.random.choice(len(valset), 5, replace=False)
+fig, axs = plt.subplots(1, 5, figsize=(15, 3))
+
+for i, idx in enumerate(indices):
+    image, true_label = valset[idx]
+    image = image.view(-1).to(device)
+    
+    with torch.no_grad():
+        output = model(image.unsqueeze(0))
+        predicted_label = output.argmax(dim=1).item()
+    
+    image = image.view(28, 28).cpu().numpy()
+    image = (image * 0.5) + 0.5  
+    
+    axs[i].imshow(image, cmap='gray')
+    axs[i].set_title(f"True: {true_label}\nPred: {predicted_label}")
+    axs[i].axis('off')
+
+plt.show()
