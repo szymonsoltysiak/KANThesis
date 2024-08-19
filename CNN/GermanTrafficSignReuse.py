@@ -3,11 +3,20 @@ from torch.utils.data import DataLoader
 import torchvision.datasets as datasets
 import random
 from CNNmodel import CNNModel
+from CNNKanInSeries import CNNKan 
 from datautils import transform, label_to_name, imshow
 
-model = CNNModel()
+mode = 'CNNKan' # CNN or CNNKan
 
-model.load_state_dict(torch.load('gtsrb_cnn_model.pth'))
+if mode == 'CNNKan':
+    model = CNNKan()
+else:
+    model = CNNModel()
+
+if mode == 'CNNKan':
+    model.load_state_dict(torch.load('gtsrb_cnnkan_model.pth'))
+else:  
+    model.load_state_dict(torch.load('gtsrb_cnn_model.pth'))
 
 model.eval()
 
