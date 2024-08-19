@@ -4,7 +4,10 @@ import torch.optim as optim
 import torchvision.datasets as datasets
 from torch.utils.data import DataLoader, random_split
 from CNNmodel import CNNModel
+from CNNKanInSeries import CNNKan 
 from datautils import transform
+
+mode = 'CNNKan' # CNN or CNNKan
 
 train_dataset = datasets.GTSRB(root='./data', split='train', transform=transform, download=True)
 test_dataset = datasets.GTSRB(root='./data', split='test', transform=transform, download=True)
@@ -17,7 +20,13 @@ train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
-model = CNNModel()
+if mode == 'CNNKan':
+    model = CNNKan()
+if mode == 'CNN':
+    model = CNNModel()
+else:
+    raise ValueError('Invalid mode')
+
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
@@ -72,4 +81,7 @@ with torch.no_grad():
 print(f'Test Loss: {test_loss / len(test_loader):.4f}')
 print(f'Test Accuracy: {100 * correct / total:.2f}%')
 
-torch.save(model.state_dict(), 'gtsrb_cnn_model.pth')
+if mode == 'CNNKan':
+    torch.save(model.state_dict(), 'gtsrb_cnnkan_model.pth')
+if mode == 'CNN':
+    torch.save(model.state_dict(), 'gtsrb_cnn_model.pth')
