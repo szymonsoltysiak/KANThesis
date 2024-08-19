@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.datasets as datasets
+import sys
 from torch.utils.data import DataLoader, random_split
 from CNNmodel import CNNModel
 from CNNKanInSeries import CNNKan 
@@ -22,10 +23,11 @@ test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 if mode == 'CNNKan':
     model = CNNKan()
-if mode == 'CNN':
+elif mode == 'CNN':
     model = CNNModel()
 else:
     raise ValueError('Invalid mode')
+    sys.exit()
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -83,5 +85,5 @@ print(f'Test Accuracy: {100 * correct / total:.2f}%')
 
 if mode == 'CNNKan':
     torch.save(model.state_dict(), 'gtsrb_cnnkan_model.pth')
-if mode == 'CNN':
+elif mode == 'CNN':
     torch.save(model.state_dict(), 'gtsrb_cnn_model.pth')

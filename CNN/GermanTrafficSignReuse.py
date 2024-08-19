@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 import torchvision.datasets as datasets
 import random
+import sys
 from CNNmodel import CNNModel
 from CNNKanInSeries import CNNKan 
 from datautils import transform, label_to_name, imshow
@@ -10,10 +11,11 @@ mode = 'CNNKan' # CNN or CNNKan
 
 if mode == 'CNNKan':
     model = CNNKan()
-if mode == 'CNN':
+elif mode == 'CNN':
     model = CNNModel()
 else:
     raise ValueError('Invalid mode')
+    sys.exit()
 
 if mode == 'CNNKan':
     model.load_state_dict(torch.load('gtsrb_cnnkan_model.pth'))
