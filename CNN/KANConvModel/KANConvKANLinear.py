@@ -1,7 +1,7 @@
 from torch import nn
 import torch.nn.functional as F
 
-from KANConv import KAN_Convolutional_Layer
+from CNN.KANConvModel.KANConvolution import KAN_Convolutional_Layer
 
 import sys
 sys.path.append("..")

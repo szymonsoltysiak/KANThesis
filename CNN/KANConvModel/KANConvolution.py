@@ -1,7 +1,7 @@
 import torch
 import math
-from KANLinear import KANLinear
-import convolution
+from CNN.KANConvModel.KANLinear import KANLinear
+import CNN.KANConvModel.convolution as convolution
 
 
 class KAN_Convolutional_Layer(torch.nn.Module):
