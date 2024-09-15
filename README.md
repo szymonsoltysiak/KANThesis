@@ -16,7 +16,7 @@ A model with convolutional layers followed by a Kolmogorov-Arnold Network (KAN).
 
 ### 3. Mixed Model
 
-**Files:** `KANConcModel.py` / `KANConvKANLinear.py`  
+**File:** `KANConcModel/KANConvKANLinear.py`  
 A hybrid architecture combining classical convolutional layers with KAN-convolutional layers, followed by a KAN.  
 **Based on:** [Convolutional Kolmogorov-Arnold Networks](https://arxiv.org/abs/2406.13155)
 
