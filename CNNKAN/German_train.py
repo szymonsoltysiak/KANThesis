@@ -19,7 +19,8 @@ val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = KKAN_Convolutional_Network(device=device)
+model = KKAN_Convolutional_Network()
+model.to(device)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
