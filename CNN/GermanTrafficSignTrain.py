@@ -6,10 +6,11 @@ import sys
 import datetime
 from torch.utils.data import DataLoader, random_split
 from CNNmodel import CNNModel
-from CNNKanInSeries import CNNKan 
+from CNNKanInSeries import CNNKan
+from KANConvModel.KANConvKANLinear import KANConvLinear 
 from datautils import transform
 
-mode = 'CNNKan' # CNN or CNNKan
+mode = 'KANConvLinear' # CNN or CNNKan or KANConvLinear
 
 train_dataset = datasets.GTSRB(root='./data', split='train', transform=transform, download=True)
 test_dataset = datasets.GTSRB(root='./data', split='test', transform=transform, download=True)
@@ -24,6 +25,8 @@ test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 if mode == 'CNNKan':
     model = CNNKan()
+elif mode == 'KANConvLinear':
+    model = KANConvLinear()
 elif mode == 'CNN':
     model = CNNModel()
 else:
@@ -87,5 +90,7 @@ print(f'Test Accuracy: {100 * correct / total:.2f}%')
 
 if mode == 'CNNKan':
     torch.save(model.state_dict(), 'gtsrb_cnnkan_model.pth')
+elif mode == 'KANConvLinear':
+    torch.save(model.state_dict(), 'gtsrb_kanconvkanlinear_model.pth')
 elif mode == 'CNN':
     torch.save(model.state_dict(), 'gtsrb_cnn_model.pth')
