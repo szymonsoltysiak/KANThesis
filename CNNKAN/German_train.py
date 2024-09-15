@@ -2,14 +2,10 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.datasets as datasets
-import sys
 import datetime
 from torch.utils.data import DataLoader, random_split
-from CNNmodel import CNNModel
-from CNNKanInSeries import CNNKan 
+from KANConvKANLinear import KKAN_Convolutional_Network
 from datautils import transform
-
-mode = 'CNNKan' # CNN or CNNKan
 
 train_dataset = datasets.GTSRB(root='./data', split='train', transform=transform, download=True)
 test_dataset = datasets.GTSRB(root='./data', split='test', transform=transform, download=True)
@@ -22,13 +18,8 @@ train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
-if mode == 'CNNKan':
-    model = CNNKan()
-elif mode == 'CNN':
-    model = CNNModel()
-else:
-    raise ValueError('Invalid mode')
-    sys.exit()
+
+model = KKAN_Convolutional_Network()
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -48,7 +39,7 @@ for epoch in range(num_epochs):
         running_loss += loss.item()
     
     scheduler.step()
-    print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {running_loss / len(train_loader):.4f} {datetime.datetime.now()}')
+    print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {running_loss / len(train_loader):.4f}, {datetime.datetime.now()}')
 
 
 model.eval()
@@ -85,7 +76,4 @@ with torch.no_grad():
 print(f'Test Loss: {test_loss / len(test_loader):.4f}')
 print(f'Test Accuracy: {100 * correct / total:.2f}%')
 
-if mode == 'CNNKan':
-    torch.save(model.state_dict(), 'gtsrb_cnnkan_model.pth')
-elif mode == 'CNN':
-    torch.save(model.state_dict(), 'gtsrb_cnn_model.pth')
+torch.save(model.state_dict(), 'gtsrb_cnnkan_model.pth')

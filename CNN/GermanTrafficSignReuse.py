@@ -7,7 +7,7 @@ from CNNmodel import CNNModel
 from CNNKanInSeries import CNNKan 
 from datautils import transform, label_to_name, imshow
 
-mode = 'CNNKan' # CNN or CNNKan
+mode = 'CNN' # CNN or CNNKan
 
 if mode == 'CNNKan':
     model = CNNKan()
