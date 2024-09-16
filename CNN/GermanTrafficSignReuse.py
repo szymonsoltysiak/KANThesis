@@ -1,6 +1,7 @@
 import sys
 import torch
 import random
+import matplotlib.pyplot as plt
 import torchvision.datasets as datasets
 
 from CNNmodel import CNNModel
@@ -8,9 +9,9 @@ from CNNKanInSeries import CNNKan
 from KANConvModel.KANConvKANLinear import KANConvLinear
 
 from torch.utils.data import DataLoader
-from datautils import transform, label_to_name, imshow
+from datautils import transform, label_to_name
 
-mode = 'KANConvLinear' # CNN or CNNKan or KANConvLinear
+mode = 'CNN' # CNN or CNNKan or KANConvLinear
 evaluate = True
 show_examples = True
 
@@ -51,14 +52,23 @@ if evaluate:
 
 if show_examples:
     indices = random.sample(range(len(test_dataset)), 3)
+    fig, axs = plt.subplots(1, 3, figsize=(10, 3))
 
-    for idx in indices:
+    for i, idx in enumerate(indices):
         image, label = test_dataset[idx]
-        output = model(image.unsqueeze(0)) 
-        _, predicted = torch.max(output, 1)
+        
+        with torch.no_grad():
+            output = model(image.unsqueeze(0)) 
+            _, predicted = torch.max(output, 1)
         
         actual_label_name = label_to_name[label]
         predicted_label_name = label_to_name[predicted.item()]
         
-        print(f"Actual Label: {actual_label_name}, Predicted Label: {predicted_label_name}")
-        imshow(image)
+        image = image.permute(1, 2, 0).cpu().numpy()
+        image = (image * 0.5) + 0.5 
+
+        axs[i].imshow(image)
+        axs[i].set_title(f"True: {actual_label_name}\nPred: {predicted_label_name}")
+        axs[i].axis('off')  
+    plt.show()
+

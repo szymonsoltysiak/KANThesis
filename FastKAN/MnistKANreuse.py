@@ -30,7 +30,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 model_load_path = 'kanet_minst.pth'
-model.load_state_dict(torch.load(model_load_path))
+model.load_state_dict(torch.load(model_load_path, weights_only=False))
 
 model.eval()
 
