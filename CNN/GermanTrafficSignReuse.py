@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 from datautils import transform, label_to_name
 
 mode = 'CNN' # CNN or CNNKan or KANConvLinear
-evaluate = True
+evaluate = False
 show_examples = True
 
 if mode == 'CNNKan':
@@ -51,8 +51,9 @@ if evaluate:
     print(f'Test Accuracy: {100 * correct / total:.2f}%')
 
 if show_examples:
-    indices = random.sample(range(len(test_dataset)), 3)
-    fig, axs = plt.subplots(1, 3, figsize=(10, 3))
+    num_examples = 5
+    indices = random.sample(range(len(test_dataset)), num_examples)
+    fig, axs = plt.subplots(1, num_examples, figsize=(10, 3))
 
     for i, idx in enumerate(indices):
         image, label = test_dataset[idx]
