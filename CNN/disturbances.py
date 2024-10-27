@@ -142,4 +142,4 @@ rain_percentages = [0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1]
 brightness_factors = [2.0, 1.5, 1.2, 1.0, 0.8, 0.5, 0.3]
 rotation_angles = [-90, -45, -20, 0, 20, 45, 90]
 
-show_all(rain_percentages, brightness_factors, rotation_angles)
+#show_all(rain_percentages, brightness_factors, rotation_angles)

@@ -11,9 +11,9 @@ from KANConvModel.KANConvKANLinear import KANConvLinear
 from torch.utils.data import DataLoader
 from datautils import transform, label_to_name
 
-mode = 'CNN' # CNN or CNNKan or KANConvLinear
-evaluate = False
-show_examples = True
+mode = 'CNNKan' # CNN or CNNKan or KANConvLinear
+evaluate = True
+show_examples = False
 
 if mode == 'CNNKan':
     model = CNNKan()
@@ -25,12 +25,12 @@ else:
     raise ValueError('Invalid mode')
     sys.exit()
 
-if mode == 'CNNKan':
-    model.load_state_dict(torch.load('gtsrb_cnnkan_model.pth', weights_only=False))
-elif mode == 'KANConvLinear':
-    model.load_state_dict(torch.load('gtsrb_kanconvkanlinear_model.pth', weights_only=False))
-if mode == 'CNN':  
-    model.load_state_dict(torch.load('gtsrb_cnn_model.pth', weights_only=False))
+model_paths = {
+    'CNN': 'gtsrb_cnn_model.pth',
+    'CNNKan': 'gtsrb_cnnkan_model2.pth',
+    'KANConvLinear': 'gtsrb_kanconvkanlinear_model.pth'
+}
+model.load_state_dict(torch.load(model_paths[mode], weights_only=False))
 
 model.eval()
 

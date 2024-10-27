@@ -37,6 +37,7 @@ elif mode == 'KANConvLinear':
 if mode == 'CNN':  
     model.load_state_dict(torch.load('gtsrb_cnn_model.pth', weights_only=False))
 
+model.eval()
 
 with torch.no_grad():
     output = model(image)
