@@ -4,13 +4,14 @@ import torch.optim as optim
 import torchvision.datasets as datasets
 import sys
 import datetime
+import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader, random_split
 from CNNmodel import CNNModel
 from CNNKanInSeries import CNNKan
 from KANConvModel.KANConvKANLinear import KANConvLinear 
 from datautils import transform
 
-mode = 'CNNKan' # CNN or CNNKan or KANConvLinear
+mode = 'CNN' # CNN or CNNKan or KANConvLinear
 
 train_dataset = datasets.GTSRB(root='./data', split='train', transform=transform, download=True)
 test_dataset = datasets.GTSRB(root='./data', split='test', transform=transform, download=True)
@@ -37,7 +38,8 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
 
-val_loss = []
+trn_losses = []
+val_losses = []
 val_acc = []
 
 num_epochs = 10
@@ -50,6 +52,7 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
         outputs = model(images)
         loss = criterion(outputs, labels)
+        trn_losses.append(loss.item())
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
@@ -74,26 +77,32 @@ for epoch in range(num_epochs):
 
     print(f'Validation Loss: {val_loss / len(val_loader):.4f}')
     print(f'Validation Accuracy: {100 * correct / total:.2f}%')
-    val_loss.append(val_loss / len(val_loader))
+    val_losses.append(val_loss / len(val_loader))
     val_acc.append(100 * correct / total)
 
-    import matplotlib.pyplot as plt
+fig, axs = plt.subplots(3, 1, figsize=(10, 15))
 
-plt.figure(figsize=(10, 5))
-plt.plot(range(1, len(val_loss)+1), val_loss, label='Validation Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.title('Validation Loss over Epochs')
-plt.legend()
+axs[0].plot(range(len(trn_losses)), trn_losses, label='Training Loss', color='blue')
+axs[0].set_xlabel('Epochs')
+axs[0].set_ylabel('Loss')
+axs[0].set_title('Training Loss over Steps')
+axs[0].legend()
+
+axs[1].plot(range(num_epochs), val_losses, label='Validation Loss', color='orange')
+axs[1].set_xlabel('Epochs')
+axs[1].set_ylabel('Loss')
+axs[1].set_title('Validation Loss over Epochs')
+axs[1].legend()
+
+axs[2].plot(range(num_epochs), val_acc, label='Validation Accuracy', color='green')
+axs[2].set_xlabel('Epochs')
+axs[2].set_ylabel('Accuracy (%)')
+axs[2].set_title('Validation Accuracy over Epochs')
+axs[2].legend()
+
+plt.tight_layout()
 plt.show()
 
-plt.figure(figsize=(10, 5))
-plt.plot(range(1, len(val_acc)+1), val_acc, label='Validation Accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy (%)')
-plt.title('Validation Accuracy over Epochs')
-plt.legend()
-plt.show()
 
 model.eval()
 test_loss = 0.0

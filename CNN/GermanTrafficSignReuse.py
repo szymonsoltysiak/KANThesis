@@ -27,7 +27,7 @@ else:
 
 model_paths = {
     'CNN': 'gtsrb_cnn_model.pth',
-    'CNNKan': 'gtsrb_cnnkan_model2.pth',
+    'CNNKan': 'gtsrb_cnnkan_model.pth',
     'KANConvLinear': 'gtsrb_kanconvkanlinear_model.pth'
 }
 model.load_state_dict(torch.load(model_paths[mode], weights_only=False))
