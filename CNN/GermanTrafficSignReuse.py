@@ -3,6 +3,8 @@ import torch
 import random
 import matplotlib.pyplot as plt
 import torchvision.datasets as datasets
+import seaborn as sns  
+from sklearn.metrics import confusion_matrix  
 
 from CNNmodel import CNNModel
 from CNNKanInSeries import CNNKan 
@@ -14,6 +16,7 @@ from datautils import transform, label_to_name
 mode = 'CNNKan' # CNN or CNNKan or KANConvLinear
 evaluate = True
 show_examples = False
+show_confusion_matrix = False
 
 if mode == 'CNNKan':
     model = CNNKan()
@@ -37,6 +40,9 @@ model.eval()
 test_dataset = datasets.GTSRB(root='./data', split='test', transform=transform, download=True)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
+all_preds = []
+all_labels = []
+
 if evaluate:
     correct = 0
     total = 0
@@ -47,6 +53,9 @@ if evaluate:
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
+
+            all_preds.extend(predicted.cpu().numpy())
+            all_labels.extend(labels.cpu().numpy())
 
     print(f'Test Accuracy: {100 * correct / total:.2f}%')
 
@@ -73,3 +82,11 @@ if show_examples:
         axs[i].axis('off')  
     plt.show()
 
+if show_confusion_matrix and evaluate:
+    cm = confusion_matrix(all_labels, all_preds)
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=list(range(len(cm))), yticklabels=list(range(len(cm))))
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.title('Confusion Matrix')
+    plt.show()
