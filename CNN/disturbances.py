@@ -47,9 +47,9 @@ def add_rain_effect(image, rain_percentage=0.01, drop_length=5, drop_thickness=1
     
     return rainy_image
 
-def apply_brightness(image, factor):
+def apply_brightness(image, brightness_factor=1.0):
     enhancer = ImageEnhance.Brightness(image)
-    return enhancer.enhance(factor)
+    return enhancer.enhance(brightness_factor)
 
 def get_average_color(image):
     np_image = np.array(image)
@@ -70,14 +70,14 @@ def zoom_image(image, zoom_factor=1.5):
     zoomed_image = image.crop((left, top, right, bottom)).resize((width, height), Image.Resampling.LANCZOS)
     return zoomed_image
 
-def apply_rotation(image, angle):
+def apply_rotation(image, angle=0):
     rotated_image = image.convert("RGBA").rotate(angle, expand=True)
     average_color = get_average_color(image)
     background = Image.new("RGBA", rotated_image.size, (*average_color, 255))  
     background.paste(rotated_image, (0, 0), rotated_image)
     background.convert("RGB")
     angle_radians = np.radians(angle)
-    return zoom_image(background, min(abs(np.sin(angle_radians)), abs(np.cos(angle_radians))) + 1)
+    return zoom_image(background, min(abs(np.sin(angle_radians)), abs(np.cos(angle_radians))) + 1).convert("RGB")
 
 def show_all(rain_percentages, brightness_factors, rotation_angles):
     num_rain_images = len(rain_percentages)

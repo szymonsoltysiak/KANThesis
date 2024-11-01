@@ -11,12 +11,11 @@ from CNNKanInSeries import CNNKan
 from KANConvModel.KANConvKANLinear import KANConvLinear
 
 from torch.utils.data import DataLoader
-from datautils import transform
-from disturbances import apply_blur, add_rain_effect, apply_brightness
+from disturbances import apply_brightness
 
-class RainEffectTransform:
-    def __init__(self, rain_percentage=0.0, size=(32, 32)):
-        self.rain_percentage = rain_percentage
+class BrightnessEffectTransform:
+    def __init__(self, brightness_factor=0.0, size=(32, 32)):
+        self.brightness_factor = brightness_factor
         self.resize = transforms.Resize(size)
         self.to_tensor = transforms.ToTensor()
         self.normalize = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
@@ -25,7 +24,7 @@ class RainEffectTransform:
         if isinstance(image, torch.Tensor):
             image = transforms.ToPILImage()(image)
 
-        disturbed_image = add_rain_effect(image, rain_percentage=self.rain_percentage)
+        disturbed_image = apply_brightness(image, brightness_factor=self.brightness_factor)
 
         if isinstance(disturbed_image, np.ndarray):
             disturbed_image = Image.fromarray(disturbed_image)
@@ -46,7 +45,7 @@ model_paths = {
 
 accuracies_dict = {model_name: [] for model_name in models.keys()}
 
-rain_percentages = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+brightness_factors = [20.0,15.0,10.0,5.0, 3.0, 2.0, 1.5,1.25, 1.0,0.8,0.6,0.5,0.4, 0.3, 0.2, 0.1, 0.0]
 
 for model_name, model in models.items():
     try:
@@ -58,8 +57,8 @@ for model_name, model in models.items():
     model.eval()
     print(f'Loaded model: {model_name}')
 
-    for rain_percentage in rain_percentages:
-        initial_transform = RainEffectTransform(rain_percentage=rain_percentage, size=(32, 32))
+    for brightness_factor in brightness_factors:
+        initial_transform = BrightnessEffectTransform(brightness_factor=brightness_factor, size=(32, 32))
 
         test_dataset = datasets.GTSRB(root='./data', split='test', transform=initial_transform, download=True)
         test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
@@ -75,14 +74,15 @@ for model_name, model in models.items():
 
         accuracy = 100 * correct / total
         accuracies_dict[model_name].append(accuracy)
-        print(f'{model_name} - Rain Percentage: {rain_percentage*100:.0f}%, Test Accuracy: {accuracy:.2f}%')
+        print(f'{model_name} - Brightness_factor: {brightness_factor:.2f}, Test Accuracy: {accuracy:.2f}%')
 
 for model_name, accuracies in accuracies_dict.items():
-    plt.plot(rain_percentages, accuracies, marker='o', label=model_name)
+    plt.plot(brightness_factors, accuracies, marker='o', label=model_name)
 
-plt.xlabel('Rain Percentage')
+plt.xlabel('Brightness factor')
 plt.ylabel('Test Accuracy (%)')
-plt.title('Model Accuracy vs. Rain Effect Intensity')
+plt.title('Model Accuracy vs. Brightness factor')
 plt.legend()
 plt.grid()
+plt.xscale('symlog')
 plt.show()
