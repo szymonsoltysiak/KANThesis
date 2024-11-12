@@ -13,10 +13,11 @@ from KANConvModel.KANConvKANLinear import KANConvLinear
 from torch.utils.data import DataLoader
 from datautils import transform, label_to_name
 
-mode = 'CNNKan' # CNN or CNNKan or KANConvLinear
-evaluate = True
+mode = 'KANConvLinear' # CNN or CNNKan or KANConvLinear
+evaluate = False
 show_examples = False
 show_confusion_matrix = False
+print_params = True
 
 if mode == 'CNNKan':
     model = CNNKan()
@@ -36,6 +37,14 @@ model_paths = {
 model.load_state_dict(torch.load(model_paths[mode], weights_only=False))
 
 model.eval()
+
+if print_params:
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print(f'Layer: {name} | Number of parameters: {param.numel()}')
+
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f'Total number of trainable parameters: {trainable_params}')
 
 test_dataset = datasets.GTSRB(root='./data', split='test', transform=transform, download=True)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
