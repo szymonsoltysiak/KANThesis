@@ -4,3 +4,4 @@ FastKAN/data/
 CNN/__pycache__/
 CNN/data/
 CNN/KANConvModel/__pycache__/
+CNN/temp/

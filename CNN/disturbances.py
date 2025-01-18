@@ -138,8 +138,100 @@ def show_all(rain_percentages, brightness_factors, rotation_angles):
     plt.tight_layout()
     plt.show()
 
-rain_percentages = [0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1]
-brightness_factors = [2.0, 1.5, 1.2, 1.0, 0.8, 0.5, 0.3]
-rotation_angles = [-90, -45, -20, 0, 20, 45, 90]
+def show_rain_effect(rain_percentages):
+    num_rain_images = len(rain_percentages)
+    
+    fig, axs = plt.subplots(1, num_rain_images, figsize=(12, 6))  # Create a single row for the images
+    
+    idx = random.randint(0, len(test_dataset) - 1)
+    original_image, _ = test_dataset[idx]
+    
+    for i, rain_percentage in enumerate(rain_percentages):
+        disturbed_image = add_rain_effect(original_image, rain_percentage=rain_percentage)
+        
+        axs[i].imshow(disturbed_image)
+        axs[i].set_title(f'{rain_percentage}')
+        axs[i].axis('off')
+
+    axs[0].imshow(original_image)
+    axs[0].set_title('Oryginalny obraz')
+    plt.tight_layout()
+    plt.show()
+
+def show_brightness_effect(brightness_factors):
+    num_brightness_images = len(brightness_factors)
+    
+    fig, axs = plt.subplots(1, num_brightness_images, figsize=(12, 6))  # Create a single row for the images
+    
+    idx = random.randint(0, len(test_dataset) - 1)
+    mid_brightness = num_brightness_images // 2
+
+    original_image, _ = test_dataset[idx]
+    
+    for i, brightness_factor in enumerate(brightness_factors):
+        disturbed_image = apply_brightness(original_image, brightness_factor=brightness_factor)
+        
+        axs[i].imshow(disturbed_image)
+        axs[i].set_title(f'{brightness_factor}')
+        axs[i].axis('off')
+
+    axs[mid_brightness].imshow(original_image)
+    axs[mid_brightness].set_title('Oryginalny obraz')
+
+    plt.tight_layout()
+    plt.show()
+
+def show_blur_effect(blur_radiuses):
+    num_blur_images = len(blur_radiuses)
+    
+    fig, axs = plt.subplots(1, num_blur_images, figsize=(12, 6)) 
+    
+    idx = random.randint(0, len(test_dataset) - 1)
+    original_image, _ = test_dataset[idx]
+    
+    for i, blur_radius in enumerate(blur_radiuses):
+        disturbed_image = apply_blur(original_image, blur_radius=blur_radius)
+        
+        axs[i].imshow(disturbed_image)
+        axs[i].set_title(f'{blur_radius}')
+        axs[i].axis('off')
+
+    axs[0].imshow(original_image)
+    axs[0].set_title('Oryginalny obraz')
+    plt.tight_layout()
+    plt.show()
+
+def show_rotation_effect(rotation_angles):
+    num_brightness_images = len(rotation_angles)
+    
+    fig, axs = plt.subplots(1, num_brightness_images, figsize=(12, 6))  # Create a single row for the images
+    
+    idx = random.randint(0, len(test_dataset) - 1)
+    mid_brightness = num_brightness_images // 2
+
+    original_image, _ = test_dataset[idx]
+    
+    for i, angle in enumerate(rotation_angles):
+        disturbed_image = apply_rotation(original_image, angle=angle)
+        
+        axs[i].imshow(disturbed_image)
+        axs[i].set_title(f'{angle}')
+        axs[i].axis('off')
+
+    axs[mid_brightness].imshow(original_image)
+    axs[mid_brightness].set_title('Oryginalny obraz')
+
+    plt.tight_layout()
+    plt.show()
+
+rain_percentages = [0.0, 0.1, 0.2, 0.5, 0.8]
+brightness_factors = [2.0, 1.5, 1.0, 0.6, 0.3]
+blur_radiuses = [0, 1, 2, 3, 4]
+rotation_angles = [-45, -20, 0, 20, 45]
 
 #show_all(rain_percentages, brightness_factors, rotation_angles)
+
+# show_rain_effect(rain_percentages)
+# show_brightness_effect(brightness_factors)
+# show_blur_effect(blur_radiuses)
+# show_rotation_effect(rotation_angles)
