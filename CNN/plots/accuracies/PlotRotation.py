@@ -5,7 +5,7 @@ with open('acc_rotation.json', 'r') as f:
     data = json.load(f)
 
 coeff = data['coeff']
-models = ['CNN', 'CNNKAN', 'CKAN', 'CNN_rotation', 'CNNKAN_rotation', 'CNN_mix', 'CNNKAN_mix']
+models = ['CNN', 'CNNKAN', 'CKAN', 'CNN_rotation', 'CNNKAN_rotation', 'CKAN_rotation', 'CNN_mix', 'CNNKAN_mix', 'CKAN_mix']
 accuracies = {model: data[model] for model in models}
 
 plt.figure(figsize=(10, 6))
