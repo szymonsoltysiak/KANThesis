@@ -12,7 +12,7 @@ from datautils import transform
 from DisturbanceTransformations import BlurEffectTransform, RotationEffectTransform, RainEffectTransform, BrightnessEffectTransform, DualTransform
 
 mode = 'CKAN'  # CNN or CNNKAN or CKAN
-disturbance_mode = "blur" # blur, rotation, rain, brightness
+disturbance_mode = "brightness" # blur, rotation, rain, brightness
 
 disturbances = {
     'blur': BlurEffectTransform,

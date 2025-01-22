@@ -11,7 +11,7 @@ from KANConvModel.KANConvKANLinear import KANConvLinear
 from datautils import transform
 from DisturbanceTransformations import BlurEffectTransform, RotationEffectTransform, RainEffectTransform, BrightnessEffectTransform, RandomDisturbanceTransform
 
-mode = 'CNN'  # CNN or CNNKAN or CKAN
+mode = 'CKAN'  # CNN or CNNKAN or CKAN
 
 disturbances = {
     'blur': BlurEffectTransform,

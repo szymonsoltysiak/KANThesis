@@ -5,7 +5,7 @@ with open('acc_blur.json', 'r') as f:
     data = json.load(f)
 
 coeff = data['coeff']
-models = ['CNN', 'CNNKAN', 'CKAN', 'CNN_blur', 'CNNKAN_blur', 'CNN_mix', 'CNNKAN_mix']
+models = ['CNN', 'CNNKAN', 'CKAN', 'CNN_blur', 'CNNKAN_blur', 'CKAN_blur', 'CNN_mix', 'CNNKAN_mix', 'CKAN_mix']
 accuracies = {model: data[model] for model in models}
 
 plt.figure(figsize=(10, 6))

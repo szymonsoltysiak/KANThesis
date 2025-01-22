@@ -5,7 +5,7 @@ with open('acc_rain.json', 'r') as f:
     data = json.load(f)
 
 coeff = data['coeff']
-models = ['CNN', 'CNNKAN', 'CKAN', 'CNN_rain', 'CNNKAN_rain', 'CNN_mix', 'CNNKAN_mix']
+models = ['CNN', 'CNNKAN', 'CKAN', 'CNN_rain', 'CNNKAN_rain', 'CKAN_rain', 'CNN_mix', 'CNNKAN_mix', 'CKAN_mix']
 accuracies = {model: data[model] for model in models}
 
 plt.figure(figsize=(10, 6))
