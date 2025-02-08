@@ -229,7 +229,7 @@ brightness_factors = [2.0, 1.5, 1.0, 0.6, 0.3]
 blur_radiuses = [0, 1, 2, 3, 4]
 rotation_angles = [-45, -20, 0, 20, 45]
 
-#show_all(rain_percentages, brightness_factors, rotation_angles)
+# show_all(rain_percentages, brightness_factors, rotation_angles)
 
 # show_rain_effect(rain_percentages)
 # show_brightness_effect(brightness_factors)

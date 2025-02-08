@@ -133,3 +133,64 @@ class RandomDisturbanceTransform:
         original_image = self.base_transform(image)
 
         return original_image, disturbed_image
+
+class RandomDisturbancesMergedTransform:
+    def __init__(self, size=(32, 32)):
+        self.size = size
+        self.resize = transforms.Resize(size)
+        self.to_tensor = transforms.ToTensor()
+        self.normalize = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+
+    def __call__(self, image):
+        if isinstance(image, torch.Tensor):
+            image = transforms.ToPILImage()(image)
+        elif isinstance(image, np.ndarray):
+            image = Image.fromarray(image)
+
+        rotation_angle = np.random.normal(0, 60)
+        rain_percentage = np.random.exponential(1 / 3)
+        blur_radius = np.random.exponential(1 / 0.125)
+        brightness_factor = np.random.gamma(2, 1)
+
+        image = apply_rotation(image, angle=rotation_angle)
+        image = apply_blur(image, blur_radius=blur_radius)
+        image = apply_brightness(image, brightness_factor=brightness_factor)
+        image = add_rain_effect(image, rain_percentage=rain_percentage)
+
+        if not isinstance(image, Image.Image):
+            image = Image.fromarray(image)
+
+
+        return self.normalize(self.to_tensor(self.resize(image)))
+
+
+
+# import matplotlib.pyplot as plt
+# import torch
+# import random
+# from torchvision import datasets, transforms
+# from PIL import Image
+
+# data_transform = transforms.Compose([transforms.Resize((32, 32)), transforms.ToTensor()])
+# test_dataset = datasets.GTSRB(root='./data', split='test', transform=data_transform, download=True)
+
+# image, _ = random.choice(test_dataset)
+
+# if isinstance(image, torch.Tensor):
+#     image = transforms.ToPILImage()(image)
+# elif isinstance(image, np.ndarray):
+#     image = Image.fromarray(image)
+
+# rotation_angle = np.random.normal(0, 30)
+# rain_percentage = np.random.exponential(1 / 3)
+# blur_radius = np.random.exponential(1 / 0.125)
+# brightness_factor = np.random.gamma(2, 1)
+
+# image = apply_rotation(image, angle=rotation_angle)
+# image = apply_blur(image, blur_radius=blur_radius)
+# image = apply_brightness(image, brightness_factor=brightness_factor)
+# image = add_rain_effect(image, rain_percentage=rain_percentage)
+
+# plt.imshow(image)
+# plt.title("Disturbed Image")
+# plt.show()
