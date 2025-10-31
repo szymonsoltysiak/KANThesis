@@ -1,5 +1,8 @@
 # Traffic Sign Recognition Repository
 
+## Paper
+[Traffic Sign Recognition with Convolutional Kolmogorov-Arnold Networks](https://ieeexplore.ieee.org/document/11123989)
+
 ## Models
 
 ### 1. Classic CNN
