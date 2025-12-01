@@ -1,7 +1,7 @@
 import json
 import matplotlib.pyplot as plt
 
-models = ['CNN', 'CNNKKAN', 'CKAN']
+models = ['CNN', 'CNNKAN', 'CKAN']
 metrics_data = {}
 x_ticks = list(range(1, 11))
 
